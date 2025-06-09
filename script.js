@@ -17,11 +17,13 @@ async function fetchProjects(cursor = null) {
 
     try {
         if (!currentUser) {
-            const user = await window.websim.getCreator() || await window.websim.getUser();
-            if (!user) {
-                console.error("Could not determine user.");
-                projectsGrid.innerHTML = '<h2>Could not load user profile.</h2>';
+            const user = await window.websim.getCreator();
+            if (!user || !user.username) {
+                console.error("Could not determine a valid creator for this page.");
+                userProfileContainer.innerHTML = '<h1>Creator not found</h1>';
+                projectsGrid.innerHTML = '<h2>Could not load creator profile.</h2>';
                 hasMore = false;
+                loader.style.display = 'none';
                 return;
             }
             currentUser = user;
@@ -163,4 +165,3 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchProjects();
     setupInfiniteScroll();
 });
-
