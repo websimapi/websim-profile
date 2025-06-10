@@ -96,7 +96,7 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
     transition: opacity 0.3s;
 }
@@ -233,4 +233,3 @@ main {
     color: #000;
     transform: rotate(90deg);
 }
-
