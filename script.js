@@ -120,7 +120,7 @@ function setupInfiniteScroll() {
             fetchProjects(nextCursor);
         }
     }, {
-        rootMargin: '1000px'
+        rootMargin: '1500px'
     });
     observer.observe(loader);
 }
