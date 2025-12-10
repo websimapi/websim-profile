@@ -9,6 +9,7 @@ let currentUser = null;
 let nextCursor = null;
 let isLoading = false;
 let hasMore = true;
+let isLoaderVisible = false;
 
 async function fetchProjects(cursor = null) {
     if (isLoading || !hasMore) return;
@@ -30,7 +31,7 @@ async function fetchProjects(cursor = null) {
             displayUserProfile(currentUser);
         }
     
-        let url = `/api/v1/users/${currentUser.username}/projects?posted=true&first=12`;
+        let url = `/api/v1/users/${currentUser.username}/projects?posted=true&first=24`;
         if (cursor) {
             url += `&after=${cursor}`;
         }
@@ -64,6 +65,10 @@ async function fetchProjects(cursor = null) {
             loader.style.display = 'none';
         } else {
             loader.classList.remove('visible');
+            // If the loader is still visible (didn't load enough to fill screen), fetch again automatically
+            if (isLoaderVisible) {
+                fetchProjects(nextCursor);
+            }
         }
     }
 }
@@ -116,11 +121,14 @@ function createProjectCard({ project, project_revision, site }) {
 
 function setupInfiniteScroll() {
     const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && !isLoading) {
+        const entry = entries[0];
+        isLoaderVisible = entry.isIntersecting;
+        
+        if (isLoaderVisible && !isLoading && hasMore) {
             fetchProjects(nextCursor);
         }
     }, {
-        rootMargin: '1500px'
+        rootMargin: '400px'
     });
     observer.observe(loader);
 }
